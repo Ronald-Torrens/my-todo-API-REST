@@ -1,0 +1,31 @@
+services:
+  # Para gestionar la BBDD con PostgreSQL:
+
+  postgres:
+    env_file: .env
+    image: ${DB_APP_PG}  # Usa la última imagen de PostgreSQL
+    container_name: pg_task_manager_db # Nombre del contenedor
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER}  # Usuario de la base de datos
+      POSTGRES_PASSWORD: ${DB_PASS}  # Contraseña del usuario
+      POSTGRES_DB: ${DB_NAME_PG}  # Nombre de la base de datos
+    ports:
+      - "${DB_EXTERNAL_PORT_PG}:${DB_INTERNAL_PORT_PG}"  # Expone el puerto 5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persistencia de datos
+# Para gestionar PostgreSQL con una interfaz gráfica:
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin_task_manager
+    depends_on:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGA_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGA_PASS}
+    ports:
+      - "5051:80"
+
+volumes:
+  postgres_data:  # Define el volumen
