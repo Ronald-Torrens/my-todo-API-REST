@@ -1,4 +1,4 @@
-# 🛍️ My Store Data Auth API
+# 🛍️ My TO-DO API REST
 
 Backend authentication API built with Node.js, Express and Sequelize.
 
@@ -25,8 +25,8 @@ Backend authentication API built with Node.js, Express and Sequelize.
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/Ronald-Torrens/my-store-data-auth.git
-cd my-store-data-auth
+git clone https://github.com/Ronald-Torrens/my-todo-API-REST.git
+cd my-todo-API-REST
 ```
 
 2. Install dependencies:
@@ -59,8 +59,20 @@ SMTP_PASSWORD=
 ```
 ## 📦 API Endpoints
 
+- Tasks:
 ```http
-POST /auth/login  
-POST /auth/recovery  
-POST /auth/change-password
+GET /task — Listar todos los tasks.
+GET /task/:id — Obtener task específico.
+POST /task — Crear un nuevo task.
+PATCH /task/:id — Actualizar task.
+DELETE /task/:id — Eliminar task.
+DELETE /task/ — Eliminar todos task.
+```
+- Authentication:
+```http
+POST /auth/login — Iniciar sesión.
+POST /auth/refresh — Refrescar tokens.
+POST /auth/recovery — Solicitar recuperación de contraseña.
+POST /auth/change-password — Cambiar contraseña con token de recuperación.
+POST /auth/logout — Cerrar sesión y eliminar refresh token.
 ```
