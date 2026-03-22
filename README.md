@@ -66,7 +66,7 @@ GET /task/:id — Obtener task específico.
 POST /task — Crear un nuevo task.
 PATCH /task/:id — Actualizar task.
 DELETE /task/:id — Eliminar task.
-DELETE /task/ — Eliminar todos task.
+DELETE /task/ — Eliminar todos los task.
 ```
 - Authentication:
 ```http
