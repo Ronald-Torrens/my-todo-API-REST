@@ -10,6 +10,11 @@ const UserSchema = {
     primaryKey: true,
     type: DataTypes.INTEGER
   },
+  nickname: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    unique: true
+  },
   email: {
     allowNull: false,
     type: DataTypes.STRING,
@@ -32,7 +37,7 @@ const UserSchema = {
   role: {
     allowNull: false,
     type: DataTypes.STRING,
-    defaultValue: 'customer'
+    defaultValue: 'user'
   },
   createdAt: {
     allowNull: false,
@@ -50,9 +55,9 @@ const UserSchema = {
 
 class User extends Model {
   static associate(models) {
-    this.hasOne(models.Customer, {
+    this.hasMany(models.Task, {
       foreignKey: 'userId',
-      as: 'customer'
+      as: 'tasks'
     });
   };
 
@@ -62,8 +67,6 @@ class User extends Model {
       tableName: USER_TABLE,
       modelName: 'User',
       timestamps: true,
-      createdAt: 'create_at',
-      updatedAt: 'updated_at',
       defaultScope: { // Siempre oculta para respuestas de todas las consultas
         attributes: {
           exclude: ['password', 'recoveryToken', 'refreshToken']

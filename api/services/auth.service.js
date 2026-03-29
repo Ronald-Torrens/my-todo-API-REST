@@ -4,9 +4,9 @@ const { config } = require('../config/config');
 const UserService = require('./users.service');
 const MailService = require('./mail.service');
 
-const { hashData, compareData } = require('../utils/security/hash');
+const { hashData, compareData } = require('../utils/security/hash.helper');
 const { buildRecoveryEmail, buildPasswordChangedEmail } = require('../libs/mail.builder');
-const { signToken, verifyToken } = require('../utils/security/token')
+const { signToken, verifyToken } = require('../utils/security/token.helper')
 
 class AuthService {
   constructor(userService, mailService) {

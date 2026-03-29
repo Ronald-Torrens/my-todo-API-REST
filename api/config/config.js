@@ -23,6 +23,23 @@ const dbUrl =
   process.env.DATABASE_URL ||
   `postgres://${encodeURIComponent(dbUser)}:${encodeURIComponent(dbPassword)}@${dbHost}:${dbPort}/${dbName}`;
 
+// Configuración de cookies para auth
+const cookieOptions = {
+  access: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production', // true en prod
+    sameSite: 'lax',
+    maxAge: 15 * 60 * 1000 // 15 minutos
+  },
+  refresh: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 días
+  }
+};
+
+
 const config = {
   env: process.env.NODE_ENV || 'development',
   isProd: process.env.NODE_ENV === 'production',
@@ -44,7 +61,9 @@ const config = {
   smtpHost,
   smtpPort,
   smtpUser,
-  smtpPassword
+  smtpPassword,
+
+  cookieOptions
 };
 
 module.exports = { config };

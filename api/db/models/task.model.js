@@ -1,5 +1,5 @@
 const { Model, DataTypes, Sequelize } = require('sequelize');
-const { CUSTOMER_TABLE } = require('./customer.model');
+const { USER_TABLE } = require('./user.model');
 
 const TASK_TABLE = 'tasks';
 
@@ -12,8 +12,12 @@ const TaskSchema = {
   },
   name: {
     allowNull: false,
-    type: DataTypes.STRING,
-    unique: true
+    type: DataTypes.STRING
+  },
+  completed: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
   },
   createdAt: {
     allowNull: false,
@@ -27,22 +31,25 @@ const TaskSchema = {
     field: 'updated_at',
     defaultValue: Sequelize.NOW
   },
-  customerId: {
-    field: 'customer_id',
-    allowNull: true,
+  userId: {
+    field: 'user_id',
+    allowNull: false,
     type: DataTypes.INTEGER,
     references: {
-      model: CUSTOMER_TABLE,
+      model: USER_TABLE,
       key: 'id'
     },
     onUpdate: 'CASCADE',
-    onDelete: 'SET NULL'
+    onDelete: 'CASCADE'
   }
 };
 
 class Task extends Model {
   static associate(models) {
-    this.belongsTo(models.Customer, { as: 'customer', foreignKey: 'customerId' })
+    this.belongsTo(models.User, {
+      as: 'user',
+      foreignKey: 'userId'
+    })
   };
 
   static config(sequelize) {
@@ -51,6 +58,13 @@ class Task extends Model {
       tableName: TASK_TABLE,
       modelName: 'Task',
       timestamps: true,
+      indexes: [
+        {
+          name: 'unique_user_task_name',
+          unique: true,
+          fields: ['user_id', 'name']
+        }
+      ]
     };
   };
 };

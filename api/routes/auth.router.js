@@ -3,9 +3,10 @@ const passport = require('passport');
 
 const router = express.Router();
 
-const { loginLimiter, recoveryLimiter, changePasswordLimiter } = require('../middleware/rateLimiter.handler');
+const { loginLimiter, recoveryLimiter, changePasswordLimiter } = require('../utils/security/rateLimiter.helper');
 const validatorHandler = require('../middleware/validator.handler');
 const { loginAuthSchema, recoveryAuthSchema, changePasswordAuthSchema } = require('../schemas/auth.schemas');
+const { setAuthCookies, clearAuthCookies } = require('../utils/security/cookies.helper');
 
 const AuthService = require('../services/auth.service');
 const service = new AuthService();
@@ -41,26 +42,42 @@ router.post('/login',
   passport.authenticate('local', { session: false }),
   async (req, res, next) => {
     try {
+
       const user = req.user;
-      const response = await service.signToken(user)
-      res.status(200).json(response);
+      const { accessToken, refreshToken, user: userData } = await service.signToken(user);
+
+      setAuthCookies(res, accessToken, refreshToken);
+
+      res.status(200).json({
+        user: userData
+      });
+
     } catch (error) {
       next(error);
     };
   }
 );
 
-router.post('/refresh',
-  async (req, res, next) => {
-    try {
-      const { refreshToken } = req.body;
-      const response = await service.refreshToken(refreshToken)
-      res.status(200).json(response);
-    } catch (error) {
-      next(error);
+router.post('/refresh', async (req, res, next) => {
+  try {
+
+    const refreshToken = req.cookies.refreshToken;
+
+    if (!refreshToken) {
+      throw boom.unauthorized('Refresh token missing');
     };
-  }
-);
+
+    const { accessToken, refreshToken: newRefreshToken } =
+      await service.refreshToken(refreshToken);
+
+    setAuthCookies(res, accessToken, newRefreshToken);
+
+    res.json({ message: 'Token refreshed' });
+
+  } catch (error) {
+    next(error);
+  };
+});
 
 router.post('/recovery',
   recoveryLimiter,
@@ -94,13 +111,18 @@ router.post('/logout',
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
     try {
+
       const userId = req.user.sub;
-      const response = await service.logout(userId);
-      res.status(200).json(response);
+
+      await service.logout(userId);
+
+      clearAuthCookies(res);
+
+      res.json({ message: 'Logged out' });
 
     } catch (error) {
       next(error);
-    }
+    };
   }
 );
 

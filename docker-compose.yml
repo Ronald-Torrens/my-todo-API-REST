@@ -4,7 +4,7 @@ services:
   postgres:
     env_file: .env
     image: ${DB_APP_PG}  # Usa la última imagen de PostgreSQL
-    container_name: pg_task_manager_db # Nombre del contenedor
+    container_name: ${DB_NAME_PG} # Nombre del contenedor
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${DB_USER}  # Usuario de la base de datos
@@ -18,7 +18,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4:latest
-    container_name: pgadmin_task_manager
+    container_name: pgadmin_todo
     depends_on:
       - postgres
     environment:

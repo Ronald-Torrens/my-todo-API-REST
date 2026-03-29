@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const routerApi = require('./routes');
 const { checkApiKey } = require('./middleware/auth.handler');
+const cookieParser = require('cookie-parser');
 
 const { errorHandler, logErrors, boomErrorHandler, sqlErrorHandler } = require('./middleware/error.handler');
 
@@ -10,13 +11,12 @@ const swaggerSpecs = require('./docs/swagger');
 
 const app = express();
 
-app.use(express.json());
-
 const whitelist = [
   'http://127.0.0.1:5500',
   'https://myapp.co',
   'https://my-todo-fzuu.onrender.com'
 ];
+
 const options = {
   origin: (origin, callback) => {
     if (whitelist.includes(origin) || !origin) {
@@ -24,9 +24,12 @@ const options = {
     } else {
       callback(new Error('Not allowed.'), false);
     }
-  }
+  },
+  credentials: true
 };
 
+app.use(express.json());
+app.use(cookieParser());
 app.use(cors(options));
 
 require('./utils/auth');
