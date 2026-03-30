@@ -3,6 +3,7 @@ const cors = require('cors');
 const routerApi = require('./routes');
 const { checkApiKey } = require('./middleware/auth.handler');
 const cookieParser = require('cookie-parser');
+const { config } = require('./config/config');
 
 const { errorHandler, logErrors, boomErrorHandler, sqlErrorHandler } = require('./middleware/error.handler');
 
@@ -11,19 +12,19 @@ const swaggerSpecs = require('./docs/swagger');
 
 const app = express();
 
-const whitelist = [
-  'http://127.0.0.1:5500',
-  'https://myapp.co',
-  'https://my-todo-fzuu.onrender.com'
-];
+const whitelist = config.corsOrigins;
 
 const options = {
   origin: (origin, callback) => {
-    if (whitelist.includes(origin) || !origin) {
+
+    if (!origin) return callback(null, true);
+
+    if (whitelist.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed.'), false);
-    }
+      console.log('Blocked by CORS:', origin);
+      callback(new Error('Not allowed by CORS'));
+    };
   },
   credentials: true
 };

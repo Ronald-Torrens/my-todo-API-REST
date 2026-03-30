@@ -1,3 +1,4 @@
+const boom = require('@hapi/boom');
 const express = require('express');
 const passport = require('passport');
 
