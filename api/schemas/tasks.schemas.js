@@ -9,7 +9,7 @@ const createTaskSchema = Joi.object({
 });
 
 const updateTaskSchema = Joi.object({
-  name: name.required(),
+  name: name,
   completed: completed
 });
 

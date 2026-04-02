@@ -16,6 +16,7 @@ requiredEnv.forEach((key) => {
 const apiKey = process.env.API_KEY
 const jwtSecret = process.env.JWT_SECRET
 const jwtRecoverySecret = process.env.JWT_RECOVERY_SECRET
+const urlRecovery = process.env.URL_RECOVERY
 
 
 // Variables para DB
@@ -80,6 +81,7 @@ const config = {
   apiKey,
   jwtSecret,
   jwtRecoverySecret,
+  urlRecovery,
 
   smtpHost,
   smtpPort,

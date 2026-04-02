@@ -13,8 +13,8 @@ const { checkRoles, checkOwnershipOrAdmin } = require('../middleware/auth.handle
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
 router.get('/',
-  //jwtAuth,
-  //checkRoles('admin'),
+  jwtAuth,
+  checkRoles('admin'),
   async (req, res, next) => {
     try {
       const users = await service.find();
@@ -40,7 +40,7 @@ router.get('/:id',
   }
 );
 
-router.post('/',
+router.post('/register',
   validatorHandler(createUserSchema, 'body'),
   async (req, res, next) => {
     try {

@@ -1,7 +1,7 @@
 const { config } = require('../config/config');
 
 const buildRecoveryEmail = (to, token) => {
-  const link = `https://myfrontend.com/recovery?token=${token}`;
+  const link = `${config.urlRecovery}?token=${token}`;
 
   return {
     from: `LanTech ${config.smtpUser}`,

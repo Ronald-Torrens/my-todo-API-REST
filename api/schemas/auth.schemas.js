@@ -3,7 +3,7 @@ const Joi = require('joi');
 const email = Joi.string().email();
 const password = Joi.string().min(8);
 const newPassword = Joi.string().min(8);
-const token = Joi.string().regex(/^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_.+/=]*$/);
+const token = Joi.string().pattern(/^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/);
 
 const loginAuthSchema = Joi.object({
   email: email.required(),
