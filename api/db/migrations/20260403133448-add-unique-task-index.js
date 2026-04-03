@@ -14,4 +14,3 @@ module.exports = {
     await queryInterface.removeIndex('tasks', 'unique_user_task_name');
   }
 };
-

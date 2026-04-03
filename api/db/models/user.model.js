@@ -12,7 +12,7 @@ const UserSchema = {
   },
   nickname: {
     type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: false,
     unique: true
   },
   email: {
